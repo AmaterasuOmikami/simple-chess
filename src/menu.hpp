@@ -3,16 +3,17 @@
 #include <SFML/Graphics.hpp>
 
 #include "button.hpp"
+#include "game.hpp"
 
 class Menu {
  public:
   Menu();
 
-  bool isOpen() const;
+  bool IsOpen() const;
 
-  void events();
+  void Events();
 
-  void display();
+  void Display();
 
  private:
   sf::RenderWindow window_;
@@ -23,10 +24,10 @@ class Menu {
   sf::Font font_;
   sf::Text title_;
 
-  Button one_player;
-  Button ai;
-  Button settings;
-  Button exit;
+  Button human_;
+  Button ai_;
+  Button settings_;
+  Button exit_;
 };
 
 
