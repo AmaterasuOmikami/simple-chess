@@ -1,9 +1,12 @@
 #pragma once
 
+#include <iostream>
+
 #include <array>
 #include <fstream>
 
 #include <SFML/Graphics.hpp>
+#include <make_move.h>
 
 class Game {
  public:
@@ -20,6 +23,10 @@ class Game {
 
   void Display();
 
+  std::string ClickToSquare(const sf::Event::MouseButtonEvent &click) const;
+
+  void ChangeTurn();
+
  private:
   sf::RenderWindow window_;
 
@@ -28,6 +35,7 @@ class Game {
 
   sf::Texture board_texture_;
   sf::Sprite board_sprite_;
+  float board_texture_size;
   float square_indent_;
   float square_size_;
 
@@ -49,8 +57,11 @@ class Game {
 
   Mode mode_;
 
-  std::string
-      fen_board{"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"};
+  chsmv::Color turn_;
+
+  std::string fen_{"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"};
+  std::string first_square_;
+  std::string second_square_;
 };
 
 
