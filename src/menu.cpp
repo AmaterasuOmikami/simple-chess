@@ -10,7 +10,7 @@ Menu::Menu() :
     settings_({50, 350}, {155, 50}, "settings"),
     exit_({50, 450}, {80, 50}, "exit") {
   // Mange window settings
-  window_.setFramerateLimit(60);
+  window_.setFramerateLimit(30);
 
   // Mange background picture
   if (!bg_texture_.loadFromFile("../assets/menu-textures/bg.jpg")) {

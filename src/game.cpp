@@ -8,6 +8,9 @@ Game::Game(Game::Mode mode)
               Style::Close),
       mode_(mode),
       turn_(chsmv::WHITE) {
+  // Mange window settings
+  window_.setFramerateLimit(30);
+
   // Manage background picture
   if (!bg_texture_.loadFromFile("../assets/menu-textures/game_bg.jpg",
                                 IntRect(0, 0, 800, 900))) {
@@ -205,6 +208,18 @@ void Game::Events() {
             switch (position.status) {
               case chsmv::NewPosition::VALID: {
                 fen_ = position.fen;
+                ChangeTurn();
+                break;
+              }
+
+              case chsmv::NewPosition::CHECK: {
+                fen_ = position.fen;
+                std::cout << "Check\n";
+                if (chsmv::IsCheckmate(fen_)) {
+                  std::cout << "Checkmate\n";
+                  window_.close();
+                }
+                // TODO: add message about check
                 ChangeTurn();
                 break;
               }

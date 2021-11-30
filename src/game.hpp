@@ -4,6 +4,7 @@
 
 #include <array>
 #include <fstream>
+#include <iostream>
 
 #include <SFML/Graphics.hpp>
 #include <make_move.h>
