@@ -204,21 +204,18 @@ void Game::Events() {
             position = chsmv::MoveProcess(fen_, first_square_ + second_square_);
             switch (position.status) {
               case chsmv::NewPosition::VALID: {
-                std::cout << "valid\n";
                 fen_ = position.fen;
                 ChangeTurn();
                 break;
               }
 
-              case chsmv::NewPosition::PAWN_UPGRADE: {
-                std::cout << "upgrade\n";
+              case chsmv::NewPosition::PAWN_PROMOTION: {
                 // TODO: open new window and select new piece
                 ChangeTurn();
                 break;
               }
 
               case chsmv::NewPosition::INVALID: {
-                std::cout << "invalid\n";
                 break;
               }
             }
@@ -255,6 +252,39 @@ void Game::Display() {
   }
   window_.draw(board_sprite_);
 
+  float row = square_indent_;
+  float col = square_indent_;
+
+  if (!first_square_.empty()) {
+
+    RectangleShape square(Vector2f(square_size_, square_size_));
+    square.setFillColor(Color(0, 128, 0, 128));
+
+    auto valid_moves = chsmv::HighlightMoves(fen_, first_square_);
+
+    // Reverse highlighting if black turn
+    if (turn_ == chsmv::BLACK) {
+      std::reverse(valid_moves.begin(), valid_moves.end());
+    }
+
+    for (int i = 0; i < valid_moves.size(); ++i) {
+      square.setPosition(col, row);
+
+      if (valid_moves[i] == '1') {
+        window_.draw(square);
+      }
+
+      if ((i + 1) % 8 == 0) {
+        row += square_size_;
+        col = square_indent_;
+        square.setPosition(col, row);
+        continue;
+      }
+
+      col += square_size_;
+    }
+  }
+
   // Iterate thought FEN board and draw pieces
   Sprite piece;
   piece.setScale(square_size_ / piece_size_,
@@ -266,8 +296,8 @@ void Game::Display() {
     std::reverse(fen_.begin(), it);
   }
 
-  float row = square_indent_;
-  float col = square_indent_;
+  row = square_indent_;
+  col = square_indent_;
 
   for (int i = 0; fen_[i] != ' '; ++i) {
     piece.setPosition(col, row);
@@ -375,3 +405,4 @@ std::string Game::ClickToSquare(const Event::MouseButtonEvent &click) const {
 void Game::ChangeTurn() {
   turn_ = (turn_ == chsmv::WHITE ? chsmv::BLACK : chsmv::WHITE);
 }
+
