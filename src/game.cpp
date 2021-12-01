@@ -13,7 +13,7 @@ Game::Game(Game::Mode mode)
 
   // Manage background picture
   if (!bg_texture_.loadFromFile("../assets/menu-textures/game_bg.jpg",
-                                IntRect(0, 0, 800, 900))) {
+                                IntRect(560, 0, 800, 900))) {
     throw std::runtime_error("Failed to load game background texture");
   }
   bg_texture_.setSmooth(true);
@@ -205,6 +205,7 @@ void Game::Events() {
 
           if (!second_square_.empty()) {
             position = chsmv::MoveProcess(fen_, first_square_ + second_square_);
+            afterNewPosition:
             switch (position.status) {
               case chsmv::NewPosition::VALID: {
                 fen_ = position.fen;
@@ -225,9 +226,18 @@ void Game::Events() {
               }
 
               case chsmv::NewPosition::PAWN_PROMOTION: {
-                // TODO: open new window and select new piece
-                ChangeTurn();
-                break;
+                char pawn_promotion;
+                Promotion promotion(pawn_promotion);
+                while (promotion.IsOpen()) {
+                  promotion.Events();
+                  promotion.Display();
+                }
+
+                position = chsmv::MoveProcess(fen_,
+                                              first_square_ + second_square_
+                                                  + pawn_promotion);
+
+                goto afterNewPosition;
               }
 
               case chsmv::NewPosition::INVALID: {

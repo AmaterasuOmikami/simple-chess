@@ -9,6 +9,8 @@
 #include <SFML/Graphics.hpp>
 #include <make_move.h>
 
+#include "promotion.hpp"
+
 class Game {
  public:
   enum class Mode {
