@@ -209,28 +209,40 @@ void Game::Events() {
             switch (position.status) {
               case chsmv::NewPosition::VALID: {
                 fen_ = position.fen;
+                std::cout << fen_ << std::endl;
                 ChangeTurn();
                 break;
               }
 
               case chsmv::NewPosition::CHECK: {
                 fen_ = position.fen;
-                std::cout << "check\n";
-                // TODO: add message about check
+                std::cout << fen_ << std::endl;
+
+                Message message("Check", sf::VideoMode(210, 70));
+                while (message.IsOpen()) {
+                  message.Events();
+                  message.Display();
+                }
                 ChangeTurn();
                 break;
               }
 
               case chsmv::NewPosition::DRAW: {
-                std::cout << "draw\n";
-                // TODO: add message about draw
+                Message message("Draw", sf::VideoMode(185, 70));
+                while (message.IsOpen()) {
+                  message.Events();
+                  message.Display();
+                }
                 window_.close();
                 break;
               }
 
               case chsmv::NewPosition::CHECKMATE: {
-                std::cout << "Checkmate\n";
-                // TODO: add message about checkmate
+                Message message("Checkmate", sf::VideoMode(370, 70));
+                while (message.IsOpen()) {
+                  message.Events();
+                  message.Display();
+                }
                 window_.close();
                 break;
               }

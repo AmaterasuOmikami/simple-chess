@@ -10,6 +10,7 @@
 #include <chsmv.h>
 
 #include "promotion.hpp"
+#include "message.hpp"
 
 class Game {
  public:

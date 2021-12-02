@@ -13,7 +13,7 @@ Menu::Menu() :
   window_.setFramerateLimit(30);
 
   // Mange background picture
-  if (!bg_texture_.loadFromFile("../assets/menu-textures/bg.jpg")) {
+  if (!bg_texture_.loadFromFile("../assets/menu-textures/main_menu_bg.jpg")) {
     throw std::runtime_error("Failed to load background texture");
   }
   bg_texture_.setSmooth(true);
