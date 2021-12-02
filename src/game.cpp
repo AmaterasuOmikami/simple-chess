@@ -204,8 +204,8 @@ void Game::Events() {
           }
 
           if (!second_square_.empty()) {
-            position = chsmv::MoveProcess(fen_, first_square_ + second_square_);
-            afterNewPosition:
+            position = chsmv::MakeMove(fen_, first_square_ + second_square_);
+            PositionParse:
             switch (position.status) {
               case chsmv::NewPosition::VALID: {
                 fen_ = position.fen;
@@ -243,11 +243,11 @@ void Game::Events() {
                   promotion.Display();
                 }
 
-                position = chsmv::MoveProcess(fen_,
-                                              first_square_ + second_square_
-                                                  + pawn_promotion);
+                position = chsmv::MakeMove(fen_,
+                                           first_square_ + second_square_
+                                               + pawn_promotion);
 
-                goto afterNewPosition;
+                goto PositionParse;
               }
 
               case chsmv::NewPosition::INVALID: {
@@ -440,4 +440,3 @@ std::string Game::ClickToSquare(const Event::MouseButtonEvent &click) const {
 void Game::ChangeTurn() {
   turn_ = (turn_ == chsmv::WHITE ? chsmv::BLACK : chsmv::WHITE);
 }
-

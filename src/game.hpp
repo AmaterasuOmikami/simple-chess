@@ -7,7 +7,7 @@
 #include <iostream>
 
 #include <SFML/Graphics.hpp>
-#include <make_move.h>
+#include <chsmv.h>
 
 #include "promotion.hpp"
 
