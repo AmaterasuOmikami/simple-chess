@@ -215,13 +215,23 @@ void Game::Events() {
 
               case chsmv::NewPosition::CHECK: {
                 fen_ = position.fen;
-                std::cout << "Check\n";
-                if (chsmv::IsCheckmate(fen_)) {
-                  std::cout << "Checkmate\n";
-                  window_.close();
-                }
+                std::cout << "check\n";
                 // TODO: add message about check
                 ChangeTurn();
+                break;
+              }
+
+              case chsmv::NewPosition::DRAW: {
+                std::cout << "draw\n";
+                // TODO: add message about draw
+                window_.close();
+                break;
+              }
+
+              case chsmv::NewPosition::CHECKMATE: {
+                std::cout << "Checkmate\n";
+                // TODO: add message about checkmate
+                window_.close();
                 break;
               }
 
