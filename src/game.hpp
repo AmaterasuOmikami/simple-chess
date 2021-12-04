@@ -68,8 +68,8 @@ class Game {
   chsmv::Color turn_;
 
   std::string fen_{"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"};
-  std::string first_square_;
-  std::string second_square_;
+  std::string spot_1_;
+  std::string spot_2_;
 };
 
 

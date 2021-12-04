@@ -36,7 +36,7 @@ void Engine::ConnectToEngine(char *path) {
 
 std::string Engine::GetNextMove(std::string fen_position) {
   std::string str;
-  fen_position = "position fen " + fen_position + "\ngo depth 10\n";
+  fen_position = "position fen " + fen_position + "\ngo depth 1\n";
 
   WriteFile(pipin_w_,
             fen_position.c_str(),
@@ -61,7 +61,7 @@ std::string Engine::GetNextMove(std::string fen_position) {
   } while (read_ >= sizeof(buffer_));
 
   auto n = str.find("bestmove");
-  if (n != -1) return str.substr(n + 9, 4);
+  if (n != -1) return str.substr(n + 9, 5);
 
   return "error";
 }

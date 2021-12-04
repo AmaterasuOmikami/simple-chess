@@ -233,9 +233,9 @@ void Game::Events() {
 
   // If stockfish mode and his turn
   if (mode_ == Mode::AI && turn_ == ai_color_) {
-    fen_ = chsmv::MakeMove(fen_, Engine::GetNextMove(fen_)).fen;
-    ChangeTurn();
-    return;
+    std::string move = Engine::GetNextMove(fen_);
+    position = chsmv::MakeMove(fen_, move);
+    goto position_status_validation;
   }
 
   while (window_.pollEvent(event)) {
@@ -244,33 +244,20 @@ void Game::Events() {
         //------- Pieces -------//
 
         // Gather move
-        if (first_square_.empty()) {
-          first_square_ = ClickToSquare(event.mouseButton);
+        if (spot_1_.empty()) {
+          spot_1_ = ClickToSquare(event.mouseButton);
 
-        } else if (second_square_.empty()) {
+        } else if (spot_2_.empty()) {
 
-          second_square_ = ClickToSquare(event.mouseButton);
-          if (chsmv::IsCurrentColor(fen_, second_square_)) {
-            first_square_ = second_square_;
-            second_square_.clear();
+          spot_2_ = ClickToSquare(event.mouseButton);
+          if (chsmv::IsCurrentColor(fen_, spot_2_)) {
+            spot_1_ = spot_2_;
+            spot_2_.clear();
           }
 
-          if (!second_square_.empty()) {
-            position = chsmv::MakeMove(fen_, first_square_ + second_square_);
-
-            // If pawn promotion open
-            if (position.status == chsmv::NewPosition::PAWN_PROMOTION) {
-              char pawn_promotion;
-              Promotion promotion(pawn_promotion);
-              while (promotion.IsOpen()) {
-                promotion.Events();
-                promotion.Display();
-              }
-
-              position = chsmv::MakeMove(fen_,
-                                         first_square_ + second_square_
-                                             + pawn_promotion);
-            }
+          if (!spot_2_.empty()) {
+            position = chsmv::MakeMove(fen_, spot_1_ + spot_2_);
+            position_status_validation:
             switch (position.status) {
               case chsmv::NewPosition::VALID: {
                 fen_ = position.fen;
@@ -280,6 +267,7 @@ void Game::Events() {
 
               case chsmv::NewPosition::CHECK: {
                 fen_ = position.fen;
+                Display();
 
                 Message message("Check", sf::VideoMode(210, 70));
                 while (message.IsOpen()) {
@@ -291,6 +279,9 @@ void Game::Events() {
               }
 
               case chsmv::NewPosition::DRAW: {
+                fen_ = position.fen;
+                Display();
+
                 Message message("Draw", sf::VideoMode(185, 70));
                 while (message.IsOpen()) {
                   message.Events();
@@ -301,6 +292,9 @@ void Game::Events() {
               }
 
               case chsmv::NewPosition::CHECKMATE: {
+                fen_ = position.fen;
+                Display();
+
                 Message message("Checkmate", sf::VideoMode(370, 70));
                 while (message.IsOpen()) {
                   message.Events();
@@ -310,14 +304,24 @@ void Game::Events() {
                 break;
               }
 
+              case chsmv::NewPosition::PAWN_PROMOTION: {
+                char promotion;
+                Promotion promotion_window(promotion);
+                while (promotion_window.IsOpen()) {
+                  promotion_window.Events();
+                  promotion_window.Display();
+                }
+
+                position = chsmv::MakeMove(fen_, spot_1_ + spot_2_ + promotion);
+                goto position_status_validation;
+              }
+
               case chsmv::NewPosition::INVALID: {
                 break;
               }
-
-              default:break;
             }
-            first_square_.clear();
-            second_square_.clear();
+            spot_1_.clear();
+            spot_2_.clear();
           }
         }
 
@@ -354,16 +358,16 @@ void Game::Display() {
   float row = square_indent_;
   float col = square_indent_;
 
-  if (!first_square_.empty()) {
+  if (mode_ == Mode::HUMAN && !spot_1_.empty()
+      || mode_ == Mode::AI && turn_ != ai_color_) {
 
     RectangleShape square(Vector2f(square_size_, square_size_));
     square.setFillColor(Color(0, 128, 0, 128));
 
-    auto valid_moves = chsmv::HighlightMoves(fen_, first_square_);
+    auto valid_moves = chsmv::HighlightMoves(fen_, spot_1_);
 
     // Reverse highlighting if black turn
-    if (mode_ == Mode::HUMAN && turn_ == chsmv::BLACK
-        || mode_ == Mode::AI && ai_color_ == chsmv::WHITE) {
+    if (mode_ == Mode::HUMAN && turn_ == chsmv::BLACK) {
       std::reverse(valid_moves.begin(), valid_moves.end());
     }
 
