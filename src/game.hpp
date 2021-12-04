@@ -1,25 +1,27 @@
 #pragma once
 
-#include <iostream>
-
 #include <array>
 #include <fstream>
 #include <iostream>
+#include <memory>
 
 #include <SFML/Graphics.hpp>
 #include <chsmv.h>
 
 #include "promotion.hpp"
 #include "message.hpp"
+#include "engine.hpp"
 
 class Game {
  public:
   enum class Mode {
-    human,
-    ai
+    HUMAN,
+    AI
   };
 
   explicit Game(Mode mode);
+
+  void Close();
 
   bool IsOpen() const;
 
@@ -39,7 +41,7 @@ class Game {
 
   sf::Texture board_texture_;
   sf::Sprite board_sprite_;
-  float board_texture_size;
+  float board_texture_size_;
   float square_indent_;
   float square_size_;
 
@@ -60,6 +62,8 @@ class Game {
   float piece_size_;
 
   Mode mode_;
+
+  chsmv::Color ai_color_;
 
   chsmv::Color turn_;
 

@@ -61,7 +61,7 @@ void Menu::Events() {
 
           // Close current window and open game window
           window_.setVisible(false);
-          Game game(Game::Mode::human);
+          Game game(Game::Mode::HUMAN);
           while (game.IsOpen()) {
             game.Events();
             game.Display();
@@ -70,6 +70,15 @@ void Menu::Events() {
 
         } else if (ai_.InArea(event.mouseButton.x, event.mouseButton.y)) {
           ai_.SetStatus(Button::Status::hovered);
+
+          // Close current window and open game window
+          window_.setVisible(false);
+          Game game(Game::Mode::AI);
+          while (game.IsOpen()) {
+            game.Events();
+            game.Display();
+          }
+          window_.setVisible(true);
 
         } else if (settings_.InArea(event.mouseButton.x, event.mouseButton.y)) {
           settings_.SetStatus(Button::Status::hovered);

@@ -19,21 +19,21 @@ Game::Game(Game::Mode mode)
   bg_texture_.setSmooth(true);
   bg_sprite_.setTexture(bg_texture_);
 
-  std::ifstream config("../.cfg");
-  if (!config) {
-    throw std::runtime_error("Failed to open .cfg (settings file)");
+  std::ifstream settings("../.settings");
+  if (!settings) {
+    throw std::runtime_error("Failed to open .settings");
   }
   // Manage board settings
   int board_type;
-  config >> board_type;
+  settings >> board_type;
   // Skip parameter comment
-  config.ignore(50, '\n');
+  settings.ignore(50, '\n');
   switch (board_type) {
     case 1: {
       if (!board_texture_.loadFromFile("../assets/boards/1.jpg")) {
         throw std::runtime_error("Failed to load board/1.jpg");
       }
-      board_texture_size = 612;
+      board_texture_size_ = 612;
       square_indent_ = 58;
       square_size_ = 62;
       break;
@@ -43,7 +43,7 @@ Game::Game(Game::Mode mode)
       if (!board_texture_.loadFromFile("../assets/boards/2.jpg")) {
         throw std::runtime_error("Failed to load board/2.jpg");
       }
-      board_texture_size = 498;
+      board_texture_size_ = 498;
       square_indent_ = 45;
       square_size_ = 51;
       break;
@@ -53,14 +53,14 @@ Game::Game(Game::Mode mode)
       if (!board_texture_.loadFromFile("../assets/boards/3.jpg")) {
         throw std::runtime_error("Failed to load board/3.jpg");
       }
-      board_texture_size = 612;
+      board_texture_size_ = 612;
       square_indent_ = 46;
       square_size_ = 65;
       break;
     }
 
     default: {
-      throw std::runtime_error("Unknown board type in .cfg (settings file)");
+      throw std::runtime_error("Unknown board type in .settings");
     }
   }
   board_texture_.setSmooth(true);
@@ -76,34 +76,38 @@ Game::Game(Game::Mode mode)
   // Manage pieces settings
 
   int pieces_type;
-  config >> pieces_type;
+  settings >> pieces_type;
   // Skip parameter comment
-  config.ignore(50, '\n');
+  settings.ignore(50, '\n');
 
   // Single piece size in texture
   std::string path;
-  int sz;
+  int size;
 
   switch (pieces_type) {
     case 1: {
       path = "../assets/pieces/1.png";
       // Just integer copy of piece_size_
-      sz = 200;
-      piece_size_ = static_cast<float>(sz);
+      size = 200;
+      piece_size_ = static_cast<float>(size);
 
-      if (!white_king_.loadFromFile(path, IntRect(0, 0, sz, sz))
-          || !white_queen_.loadFromFile(path, IntRect(sz, 0, sz, sz))
-          || !white_bishop_.loadFromFile(path, IntRect(2 * sz, 0, sz, sz))
-          || !white_knight_.loadFromFile(path, IntRect(3 * sz, 0, sz, sz))
-          || !white_rook_.loadFromFile(path, IntRect(4 * sz, 0, sz, sz))
-          || !white_pawn_.loadFromFile(path, IntRect(5 * sz, 0, sz, sz))
+      if (!white_king_.loadFromFile(path, IntRect(0, 0, size, size))
+          || !white_queen_.loadFromFile(path, IntRect(size, 0, size, size))
+          || !white_bishop_.loadFromFile(path, IntRect(2 * size, 0, size, size))
+          || !white_knight_.loadFromFile(path, IntRect(3 * size, 0, size, size))
+          || !white_rook_.loadFromFile(path, IntRect(4 * size, 0, size, size))
+          || !white_pawn_.loadFromFile(path, IntRect(5 * size, 0, size, size))
 
-          || !black_king_.loadFromFile(path, IntRect(0, sz, sz, sz))
-          || !black_queen_.loadFromFile(path, IntRect(sz, sz, sz, sz))
-          || !black_bishop_.loadFromFile(path, IntRect(2 * sz, sz, sz, sz))
-          || !black_knight_.loadFromFile(path, IntRect(3 * sz, sz, sz, sz))
-          || !black_rook_.loadFromFile(path, IntRect(4 * sz, sz, sz, sz))
-          || !black_pawn_.loadFromFile(path, IntRect(5 * sz, sz, sz, sz))) {
+          || !black_king_.loadFromFile(path, IntRect(0, size, size, size))
+          || !black_queen_.loadFromFile(path, IntRect(size, size, size, size))
+          || !black_bishop_.loadFromFile(path,
+                                         IntRect(2 * size, size, size, size))
+          || !black_knight_.loadFromFile(path,
+                                         IntRect(3 * size, size, size, size))
+          || !black_rook_.loadFromFile(path,
+                                       IntRect(4 * size, size, size, size))
+          || !black_pawn_.loadFromFile(path,
+                                       IntRect(5 * size, size, size, size))) {
         throw std::runtime_error("Failed to load pieces/1.png");
       }
       break;
@@ -112,22 +116,27 @@ Game::Game(Game::Mode mode)
     case 2: {
       path = "../assets/pieces/2.png";
       // Just integer copy of piece_size_
-      sz = 64;
-      piece_size_ = static_cast<float>(sz);
+      size = 64;
+      piece_size_ = static_cast<float>(size);
 
-      if (!white_king_.loadFromFile(path, IntRect(0, sz, sz, sz))
-          || !white_queen_.loadFromFile(path, IntRect(sz, sz, sz, sz))
-          || !white_bishop_.loadFromFile(path, IntRect(4 * sz, sz, sz, sz))
-          || !white_knight_.loadFromFile(path, IntRect(3 * sz, sz, sz, sz))
-          || !white_rook_.loadFromFile(path, IntRect(2 * sz, sz, sz, sz))
-          || !white_pawn_.loadFromFile(path, IntRect(5 * sz, sz, sz, sz))
+      if (!white_king_.loadFromFile(path, IntRect(0, size, size, size))
+          || !white_queen_.loadFromFile(path, IntRect(size, size, size, size))
+          || !white_bishop_.loadFromFile(path,
+                                         IntRect(4 * size, size, size, size))
+          || !white_knight_.loadFromFile(path,
+                                         IntRect(3 * size, size, size, size))
+          || !white_rook_.loadFromFile(path,
+                                       IntRect(2 * size, size, size, size))
+          || !white_pawn_.loadFromFile(path,
+                                       IntRect(5 * size, size, size, size))
 
-          || !black_king_.loadFromFile(path, IntRect(0, 0, sz, sz))
-          || !black_queen_.loadFromFile(path, IntRect(sz, 0, sz, sz))
-          || !black_bishop_.loadFromFile(path, IntRect(4 * sz, 0, sz, sz))
-          || !black_knight_.loadFromFile(path, IntRect(3 * sz, 0, sz, sz))
-          || !black_rook_.loadFromFile(path, IntRect(2 * sz, 0, sz, sz))
-          || !black_pawn_.loadFromFile(path, IntRect(5 * sz, 0, sz, sz))) {
+          || !black_king_.loadFromFile(path, IntRect(0, 0, size, size))
+          || !black_queen_.loadFromFile(path, IntRect(size, 0, size, size))
+          || !black_bishop_.loadFromFile(path, IntRect(4 * size, 0, size, size))
+          || !black_knight_.loadFromFile(path, IntRect(3 * size, 0, size, size))
+          || !black_rook_.loadFromFile(path, IntRect(2 * size, 0, size, size))
+          || !black_pawn_.loadFromFile(path,
+                                       IntRect(5 * size, 0, size, size))) {
         throw std::runtime_error("Failed to load pieces/2.png");
       }
       break;
@@ -136,30 +145,45 @@ Game::Game(Game::Mode mode)
     case 3: {
       path = "../assets/pieces/3.png";
       // Just integer copy of piece_size_
-      sz = 300;
-      piece_size_ = static_cast<float>(sz);
+      size = 300;
+      piece_size_ = static_cast<float>(size);
 
-      if (!white_king_.loadFromFile(path, IntRect(3 * sz, 125 + sz, sz, sz))
-          || !white_queen_.loadFromFile(path, IntRect(2 * sz, 125 + sz, sz, sz))
-          || !white_bishop_.loadFromFile(path, IntRect(sz, 125 + sz, sz, sz))
+      if (!white_king_.loadFromFile(path,
+                                    IntRect(3 * size, 125 + size, size, size))
+          || !white_queen_.loadFromFile(path,
+                                        IntRect(2 * size,
+                                                125 + size,
+                                                size,
+                                                size))
+          || !white_bishop_.loadFromFile(path,
+                                         IntRect(size, 125 + size, size, size))
           || !white_knight_.loadFromFile(path,
-                                         IntRect(4 * sz, 125 + sz, sz, sz))
-          || !white_rook_.loadFromFile(path, IntRect(0, 125 + sz, sz, sz))
-          || !white_pawn_.loadFromFile(path, IntRect(5 * sz, 125 + sz, sz, sz))
+                                         IntRect(4 * size,
+                                                 125 + size,
+                                                 size,
+                                                 size))
+          || !white_rook_.loadFromFile(path, IntRect(0, 125 + size, size, size))
+          || !white_pawn_.loadFromFile(path,
+                                       IntRect(5 * size,
+                                               125 + size,
+                                               size,
+                                               size))
 
-          || !black_king_.loadFromFile(path, IntRect(3 * sz, 50, sz, sz))
-          || !black_queen_.loadFromFile(path, IntRect(2 * sz, 50, sz, sz))
-          || !black_bishop_.loadFromFile(path, IntRect(sz, 50, sz, sz))
-          || !black_knight_.loadFromFile(path, IntRect(4 * sz, 50, sz, sz))
-          || !black_rook_.loadFromFile(path, IntRect(0 * sz, 50, sz, sz))
-          || !black_pawn_.loadFromFile(path, IntRect(5 * sz, 50, sz, sz))) {
+          || !black_king_.loadFromFile(path, IntRect(3 * size, 50, size, size))
+          || !black_queen_.loadFromFile(path, IntRect(2 * size, 50, size, size))
+          || !black_bishop_.loadFromFile(path, IntRect(size, 50, size, size))
+          || !black_knight_.loadFromFile(path,
+                                         IntRect(4 * size, 50, size, size))
+          || !black_rook_.loadFromFile(path, IntRect(0 * size, 50, size, size))
+          || !black_pawn_.loadFromFile(path,
+                                       IntRect(5 * size, 50, size, size))) {
         throw std::runtime_error("Failed to load pieces/3.png");
       }
       break;
     }
 
     default: {
-      throw std::runtime_error("Unknown pieces type in .cfg (settings file)");
+      throw std::runtime_error("Unknown pieces type in .settings");
     }
   }
   white_king_.setSmooth(true);
@@ -175,7 +199,28 @@ Game::Game(Game::Mode mode)
   black_rook_.setSmooth(true);
   black_pawn_.setSmooth(true);
 
-  config.close();
+  //----- AI --------//
+
+  if (mode_ == Mode::AI) {
+    // Read AI color
+
+    int ai_color;
+    settings >> ai_color;
+    // Skip parameter comment
+    settings.ignore(50, '\n');
+    ai_color_ = ai_color == 0 ? chsmv::WHITE : chsmv::BLACK;
+
+    // Run engine
+    char engine_path[] = "C:/programming/chess/stockfish/stockfish.exe";
+    Engine::ConnectToEngine(engine_path);
+  }
+
+  settings.close();
+}
+
+void Game::Close() {
+  Engine::CloseConnection();
+  window_.close();
 }
 
 bool Game::IsOpen() const {
@@ -185,6 +230,13 @@ bool Game::IsOpen() const {
 void Game::Events() {
   Event event{};
   chsmv::NewPosition position;
+
+  // If stockfish mode and his turn
+  if (mode_ == Mode::AI && turn_ == ai_color_) {
+    fen_ = chsmv::MakeMove(fen_, Engine::GetNextMove(fen_)).fen;
+    ChangeTurn();
+    return;
+  }
 
   while (window_.pollEvent(event)) {
     switch (event.type) {
@@ -205,18 +257,29 @@ void Game::Events() {
 
           if (!second_square_.empty()) {
             position = chsmv::MakeMove(fen_, first_square_ + second_square_);
-            PositionParse:
+
+            // If pawn promotion open
+            if (position.status == chsmv::NewPosition::PAWN_PROMOTION) {
+              char pawn_promotion;
+              Promotion promotion(pawn_promotion);
+              while (promotion.IsOpen()) {
+                promotion.Events();
+                promotion.Display();
+              }
+
+              position = chsmv::MakeMove(fen_,
+                                         first_square_ + second_square_
+                                             + pawn_promotion);
+            }
             switch (position.status) {
               case chsmv::NewPosition::VALID: {
                 fen_ = position.fen;
-                std::cout << fen_ << std::endl;
                 ChangeTurn();
                 break;
               }
 
               case chsmv::NewPosition::CHECK: {
                 fen_ = position.fen;
-                std::cout << fen_ << std::endl;
 
                 Message message("Check", sf::VideoMode(210, 70));
                 while (message.IsOpen()) {
@@ -233,7 +296,7 @@ void Game::Events() {
                   message.Events();
                   message.Display();
                 }
-                window_.close();
+                Close();
                 break;
               }
 
@@ -243,28 +306,15 @@ void Game::Events() {
                   message.Events();
                   message.Display();
                 }
-                window_.close();
+                Close();
                 break;
-              }
-
-              case chsmv::NewPosition::PAWN_PROMOTION: {
-                char pawn_promotion;
-                Promotion promotion(pawn_promotion);
-                while (promotion.IsOpen()) {
-                  promotion.Events();
-                  promotion.Display();
-                }
-
-                position = chsmv::MakeMove(fen_,
-                                           first_square_ + second_square_
-                                               + pawn_promotion);
-
-                goto PositionParse;
               }
 
               case chsmv::NewPosition::INVALID: {
                 break;
               }
+
+              default:break;
             }
             first_square_.clear();
             second_square_.clear();
@@ -275,7 +325,7 @@ void Game::Events() {
       }
 
       case Event::Closed: {
-        window_.close();
+        Close();
         break;
       }
 
@@ -290,10 +340,12 @@ void Game::Display() {
   window_.draw(bg_sprite_);
 
   // Rotate board
-  if (mode_ == Mode::human && turn_ == chsmv::BLACK) {
+  if (mode_ == Mode::HUMAN && turn_ == chsmv::BLACK
+      || mode_ == Mode::AI && ai_color_ == chsmv::WHITE) {
     board_sprite_.setRotation(180.f);
-    board_sprite_.setOrigin(board_texture_size, board_texture_size);
-  } else if (mode_ == Mode::human && turn_ == chsmv::WHITE) {
+    board_sprite_.setOrigin(board_texture_size_, board_texture_size_);
+  } else if (mode_ == Mode::HUMAN && turn_ == chsmv::WHITE
+      || mode_ == Mode::AI && ai_color_ == chsmv::BLACK) {
     board_sprite_.setRotation(0.f);
     board_sprite_.setOrigin(0, 0);
   }
@@ -310,7 +362,8 @@ void Game::Display() {
     auto valid_moves = chsmv::HighlightMoves(fen_, first_square_);
 
     // Reverse highlighting if black turn
-    if (turn_ == chsmv::BLACK) {
+    if (mode_ == Mode::HUMAN && turn_ == chsmv::BLACK
+        || mode_ == Mode::AI && ai_color_ == chsmv::WHITE) {
       std::reverse(valid_moves.begin(), valid_moves.end());
     }
 
@@ -338,9 +391,10 @@ void Game::Display() {
                  square_size_ / piece_size_);
 
   // Rotate pieces
-  if (mode_ == Mode::human && turn_ == chsmv::BLACK) {
-    auto it = std::find(fen_.begin(), fen_.end(), ' ');
-    std::reverse(fen_.begin(), it);
+  if (mode_ == Mode::HUMAN && turn_ == chsmv::BLACK
+      || mode_ == Mode::AI && ai_color_ == chsmv::WHITE) {
+    auto iter = std::find(fen_.begin(), fen_.end(), ' ');
+    std::reverse(fen_.begin(), iter);
   }
 
   row = square_indent_;
@@ -405,9 +459,10 @@ void Game::Display() {
   }
 
   // Rotate pieces again
-  if (mode_ == Mode::human && turn_ == chsmv::BLACK) {
-    auto it = std::find(fen_.begin(), fen_.end(), ' ');
-    std::reverse(fen_.begin(), it);
+  if (mode_ == Mode::HUMAN && turn_ == chsmv::BLACK
+      || mode_ == Mode::AI && ai_color_ == chsmv::WHITE) {
+    auto iter = std::find(fen_.begin(), fen_.end(), ' ');
+    std::reverse(fen_.begin(), iter);
   }
 
   window_.display();
