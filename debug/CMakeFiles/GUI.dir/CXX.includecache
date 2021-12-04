@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/programming/chess/GUI/src/engine.cpp
+engine.hpp
+C:/programming/chess/GUI/src/engine.hpp
+
+C:/programming/chess/GUI/src/engine.hpp
+windows.h
+-
+string
+-
+

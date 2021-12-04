@@ -36,18 +36,18 @@ Button::Status Button::GetStatus() const {
 void Button::SetStatus(Button::Status status) {
   switch (status_ = status) {
     case Status::none: {
-      sprite_.setColor(sf::Color(0,0,0,0));
+      sprite_.setColor(sf::Color(0, 0, 0, 0));
       break;
     }
 
     case Status::hovered: {
-      sprite_.setColor(sf::Color(255,255,255,128));
+      sprite_.setColor(sf::Color(255, 255, 255, 128));
 
       break;
     }
 
     case Status::clicked: {
-      sprite_.setColor(sf::Color(255,128,128,128));
+      sprite_.setColor(sf::Color(255, 128, 128, 128));
       break;
     }
   }

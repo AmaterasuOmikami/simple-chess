@@ -4,7 +4,7 @@
 
 class Message {
  public:
-  Message(const std::string& message, const sf::VideoMode& video_mode);
+  Message(const std::string &message, const sf::VideoMode &video_mode);
 
   bool IsOpen() const;
 

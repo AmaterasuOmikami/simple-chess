@@ -1,0 +1,1 @@
+ C:/SFML/lib/libsfml-system-s-d.a C:/SFML/lib/libsfml-window-s-d.a C:/SFML/lib/libsfml-graphics-s-d.a C:/programming/chess/chsmv/build/libchsmv-lib.a C:/SFML/lib/libsfml-window-s-d.a C:/SFML/lib/libsfml-system-s-d.a -lwinmm -lgdi32 -lOpenGL32 C:/SFML/lib/libfreetype.a -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 

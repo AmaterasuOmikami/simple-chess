@@ -1,0 +1,3 @@
+C:/programming/chess/GUI/debug/CMakeFiles/edit_cache.dir
+C:/programming/chess/GUI/debug/CMakeFiles/GUI.dir
+C:/programming/chess/GUI/debug/CMakeFiles/rebuild_cache.dir
