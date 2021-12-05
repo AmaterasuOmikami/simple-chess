@@ -1,7 +1,6 @@
 #include "menu.hpp"
 
 int main() {
-  // TODO: Back button
   Menu menu;
   while (menu.IsOpen()) {
     menu.Events();

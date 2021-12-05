@@ -1,8 +1,7 @@
 #pragma once
 
-#include <array>
+#include <list>
 #include <fstream>
-#include <iostream>
 #include <memory>
 
 #include <SFML/Graphics.hpp>
@@ -33,6 +32,8 @@ class Game {
   std::string ClickToSquare(const sf::Event::MouseButtonEvent &click) const;
 
   void ConfirmMove(const chsmv::NewPosition &position);
+
+  void RewindPosition();
 
   void ChangeTurn();
 
@@ -70,6 +71,8 @@ class Game {
   sf::SoundBuffer move_sound_buffer_;
   sf::Sound move_sound_;
 
+  Button back_button_;
+
   Mode mode_;
 
   chsmv::Color ai_color_;
@@ -77,6 +80,8 @@ class Game {
   chsmv::Color turn_;
 
   std::string fen_{"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"};
+  std::list<std::string> fens_list_;
+
   std::string spot_1_;
   std::string spot_2_;
 };

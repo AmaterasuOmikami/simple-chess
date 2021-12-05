@@ -6,6 +6,7 @@ Game::Game(Game::Mode mode)
     : window_(VideoMode(800, 900),
               "Game",
               Style::Close),
+      back_button_({680, 820}, {100, 50}, "Back"),
       mode_(mode),
       turn_(chsmv::WHITE) {
   // Mange window settings
@@ -190,6 +191,8 @@ Game::Game(Game::Mode mode)
   }
   move_sound_.setBuffer(move_sound_buffer_);
 
+  // Add start position to list
+  fens_list_.push_back(fen_);
 
   //----- AI --------//
 
@@ -233,6 +236,12 @@ void Game::Events() {
   while (window_.pollEvent(event)) {
     switch (event.type) {
       case Event::MouseButtonPressed: {
+        // Buttons
+
+        if (back_button_.InArea(event.mouseButton.x, event.mouseButton.y)) {
+          back_button_.SetStatus(Button::Status::CLICKED);
+        }
+
         //------- Pieces -------//
 
         // Gather move
@@ -320,6 +329,26 @@ void Game::Events() {
         break;
       }
 
+      case Event::MouseButtonReleased: {
+        if (back_button_.InArea(event.mouseButton.x, event.mouseButton.y)) {
+          back_button_.SetStatus(Button::Status::HOVERED);
+
+          RewindPosition();
+        }
+        break;
+      }
+
+      case sf::Event::MouseMoved: {
+        if (back_button_.InArea(event.mouseMove.x, event.mouseMove.y)) {
+          if (back_button_.GetStatus() != Button::Status::CLICKED) {
+            back_button_.SetStatus(Button::Status::HOVERED);
+          }
+        } else {
+          back_button_.SetStatus(Button::Status::NONE);
+        }
+        break;
+      }
+
       case Event::Closed: {
         Close();
         break;
@@ -349,6 +378,9 @@ void Game::Display() {
 
   // Draw fen string
   window_.draw(fen_text_);
+
+  // Draw back button
+  window_.draw(back_button_);
 
   float row = square_indent_;
   float col = square_indent_;
@@ -510,6 +542,19 @@ void Game::ConfirmMove(const chsmv::NewPosition &position) {
   fen_ = position.fen;
   // Set new fen position in fen string
   fen_text_.setString(fen_);
+  // Add current fen position to list
+  fens_list_.push_back(fen_);
+}
+
+void Game::RewindPosition() {
+  // Do nothing if list have only one node
+  if (fens_list_.size() < 3) {
+    return;
+  }
+
+  fens_list_.pop_back();
+  fens_list_.pop_back();
+  fen_ = fens_list_.back();
 }
 
 void Game::ChangeTurn() {
