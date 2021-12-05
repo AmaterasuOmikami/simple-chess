@@ -35,38 +35,38 @@ void Promotion::Events() {
     switch (event.type) {
       case sf::Event::MouseButtonPressed: {
         if (queen_.InArea(event.mouseButton.x, event.mouseButton.y)) {
-          queen_.SetStatus(Button::Status::clicked);
+          queen_.SetStatus(Button::Status::CLICKED);
 
         } else if (rook_.InArea(event.mouseButton.x, event.mouseButton.y)) {
-          rook_.SetStatus(Button::Status::clicked);
+          rook_.SetStatus(Button::Status::CLICKED);
 
         } else if (bishop_.InArea(event.mouseButton.x, event.mouseButton.y)) {
-          bishop_.SetStatus(Button::Status::clicked);
+          bishop_.SetStatus(Button::Status::CLICKED);
 
         } else if (knight_.InArea(event.mouseButton.x, event.mouseButton.y)) {
-          knight_.SetStatus(Button::Status::clicked);
+          knight_.SetStatus(Button::Status::CLICKED);
         }
         break;
       }
 
       case sf::Event::MouseButtonReleased: {
         if (queen_.InArea(event.mouseButton.x, event.mouseButton.y)) {
-          queen_.SetStatus(Button::Status::hovered);
+          queen_.SetStatus(Button::Status::HOVERED);
           pawn_promotion_ = 'q';
           window_.close();
 
         } else if (rook_.InArea(event.mouseButton.x, event.mouseButton.y)) {
-          rook_.SetStatus(Button::Status::hovered);
+          rook_.SetStatus(Button::Status::HOVERED);
           pawn_promotion_ = 'r';
           window_.close();
 
         } else if (bishop_.InArea(event.mouseButton.x, event.mouseButton.y)) {
-          bishop_.SetStatus(Button::Status::hovered);
+          bishop_.SetStatus(Button::Status::HOVERED);
           pawn_promotion_ = 'b';
           window_.close();
 
         } else if (knight_.InArea(event.mouseButton.x, event.mouseButton.y)) {
-          knight_.SetStatus(Button::Status::hovered);
+          knight_.SetStatus(Button::Status::HOVERED);
           pawn_promotion_ = 'n';
           window_.close();
         }
@@ -75,35 +75,35 @@ void Promotion::Events() {
 
       case sf::Event::MouseMoved: {
         if (queen_.InArea(event.mouseMove.x, event.mouseMove.y)) {
-          if (queen_.GetStatus() != Button::Status::clicked) {
-            queen_.SetStatus(Button::Status::hovered);
+          if (queen_.GetStatus() != Button::Status::CLICKED) {
+            queen_.SetStatus(Button::Status::HOVERED);
           }
         } else {
-          queen_.SetStatus(Button::Status::none);
+          queen_.SetStatus(Button::Status::NONE);
         }
 
         if (rook_.InArea(event.mouseMove.x, event.mouseMove.y)) {
-          if (rook_.GetStatus() != Button::Status::clicked) {
-            rook_.SetStatus(Button::Status::hovered);
+          if (rook_.GetStatus() != Button::Status::CLICKED) {
+            rook_.SetStatus(Button::Status::HOVERED);
           }
         } else {
-          rook_.SetStatus(Button::Status::none);
+          rook_.SetStatus(Button::Status::NONE);
         }
 
         if (bishop_.InArea(event.mouseMove.x, event.mouseMove.y)) {
-          if (bishop_.GetStatus() != Button::Status::clicked) {
-            bishop_.SetStatus(Button::Status::hovered);
+          if (bishop_.GetStatus() != Button::Status::CLICKED) {
+            bishop_.SetStatus(Button::Status::HOVERED);
           }
         } else {
-          bishop_.SetStatus(Button::Status::none);
+          bishop_.SetStatus(Button::Status::NONE);
         }
 
         if (knight_.InArea(event.mouseMove.x, event.mouseMove.y)) {
-          if (knight_.GetStatus() != Button::Status::clicked) {
-            knight_.SetStatus(Button::Status::hovered);
+          if (knight_.GetStatus() != Button::Status::CLICKED) {
+            knight_.SetStatus(Button::Status::HOVERED);
           }
         } else {
-          knight_.SetStatus(Button::Status::none);
+          knight_.SetStatus(Button::Status::NONE);
         }
         break;
       }

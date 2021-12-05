@@ -41,23 +41,23 @@ void Menu::Events() {
     switch (event.type) {
       case sf::Event::MouseButtonPressed: {
         if (human_.InArea(event.mouseButton.x, event.mouseButton.y)) {
-          human_.SetStatus(Button::Status::clicked);
+          human_.SetStatus(Button::Status::CLICKED);
 
         } else if (ai_.InArea(event.mouseButton.x, event.mouseButton.y)) {
-          ai_.SetStatus(Button::Status::clicked);
+          ai_.SetStatus(Button::Status::CLICKED);
 
         } else if (settings_.InArea(event.mouseButton.x, event.mouseButton.y)) {
-          settings_.SetStatus(Button::Status::clicked);
+          settings_.SetStatus(Button::Status::CLICKED);
 
         } else if (exit_.InArea(event.mouseButton.x, event.mouseButton.y)) {
-          exit_.SetStatus(Button::Status::clicked);
+          exit_.SetStatus(Button::Status::CLICKED);
         }
         break;
       }
 
       case sf::Event::MouseButtonReleased: {
         if (human_.InArea(event.mouseButton.x, event.mouseButton.y)) {
-          human_.SetStatus(Button::Status::hovered);
+          human_.SetStatus(Button::Status::HOVERED);
 
           // Close current window and open game window
           window_.setVisible(false);
@@ -69,7 +69,7 @@ void Menu::Events() {
           window_.setVisible(true);
 
         } else if (ai_.InArea(event.mouseButton.x, event.mouseButton.y)) {
-          ai_.SetStatus(Button::Status::hovered);
+          ai_.SetStatus(Button::Status::HOVERED);
 
           // Close current window and open game window
           window_.setVisible(false);
@@ -81,10 +81,10 @@ void Menu::Events() {
           window_.setVisible(true);
 
         } else if (settings_.InArea(event.mouseButton.x, event.mouseButton.y)) {
-          settings_.SetStatus(Button::Status::hovered);
+          settings_.SetStatus(Button::Status::HOVERED);
 
         } else if (exit_.InArea(event.mouseButton.x, event.mouseButton.y)) {
-          exit_.SetStatus(Button::Status::hovered);
+          exit_.SetStatus(Button::Status::HOVERED);
           window_.close();
         }
         break;
@@ -92,35 +92,35 @@ void Menu::Events() {
 
       case sf::Event::MouseMoved: {
         if (human_.InArea(event.mouseMove.x, event.mouseMove.y)) {
-          if (human_.GetStatus() != Button::Status::clicked) {
-            human_.SetStatus(Button::Status::hovered);
+          if (human_.GetStatus() != Button::Status::CLICKED) {
+            human_.SetStatus(Button::Status::HOVERED);
           }
         } else {
-          human_.SetStatus(Button::Status::none);
+          human_.SetStatus(Button::Status::NONE);
         }
 
         if (ai_.InArea(event.mouseMove.x, event.mouseMove.y)) {
-          if (ai_.GetStatus() != Button::Status::clicked) {
-            ai_.SetStatus(Button::Status::hovered);
+          if (ai_.GetStatus() != Button::Status::CLICKED) {
+            ai_.SetStatus(Button::Status::HOVERED);
           }
         } else {
-          ai_.SetStatus(Button::Status::none);
+          ai_.SetStatus(Button::Status::NONE);
         }
 
         if (settings_.InArea(event.mouseMove.x, event.mouseMove.y)) {
-          if (settings_.GetStatus() != Button::Status::clicked) {
-            settings_.SetStatus(Button::Status::hovered);
+          if (settings_.GetStatus() != Button::Status::CLICKED) {
+            settings_.SetStatus(Button::Status::HOVERED);
           }
         } else {
-          settings_.SetStatus(Button::Status::none);
+          settings_.SetStatus(Button::Status::NONE);
         }
 
         if (exit_.InArea(event.mouseMove.x, event.mouseMove.y)) {
-          if (exit_.GetStatus() != Button::Status::clicked) {
-            exit_.SetStatus(Button::Status::hovered);
+          if (exit_.GetStatus() != Button::Status::CLICKED) {
+            exit_.SetStatus(Button::Status::HOVERED);
           }
         } else {
-          exit_.SetStatus(Button::Status::none);
+          exit_.SetStatus(Button::Status::NONE);
         }
         break;
       }

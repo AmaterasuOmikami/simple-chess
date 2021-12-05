@@ -1,3 +1,3 @@
 "C:\Program Files\JetBrains\CLion 2021.2.3\bin\cmake\win\bin\cmake.exe" -E rm -f CMakeFiles\GUI.dir/objects.a
 C:\mingw64\bin\ar.exe qc CMakeFiles\GUI.dir/objects.a @CMakeFiles\GUI.dir\objects1.rsp
-C:\mingw64\bin\g++.exe  -s -o3 -g -mwindows -Wl,--whole-archive CMakeFiles\GUI.dir/objects.a -Wl,--no-whole-archive -o GUI.exe -Wl,--out-implib,libGUI.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\GUI.dir\linklibs.rsp
+C:\mingw64\bin\g++.exe  -Wall -Werror -Wextra -pedantic -fno-rtti -s -O3 -g -mwindows -Wl,--whole-archive CMakeFiles\GUI.dir/objects.a -Wl,--no-whole-archive -o GUI.exe -Wl,--out-implib,libGUI.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\GUI.dir\linklibs.rsp

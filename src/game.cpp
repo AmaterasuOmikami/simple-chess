@@ -199,6 +199,14 @@ Game::Game(Game::Mode mode)
   black_rook_.setSmooth(true);
   black_pawn_.setSmooth(true);
 
+  // Manage sound settings
+
+  if (!move_sound_buffer_.loadFromFile("../assets/sounds/move.wav")) {
+    throw std::runtime_error("Filed to load move sound");
+  }
+  move_sound_.setBuffer(move_sound_buffer_);
+
+
   //----- AI --------//
 
   if (mode_ == Mode::AI) {
@@ -260,13 +268,13 @@ void Game::Events() {
             position_status_validation:
             switch (position.status) {
               case chsmv::NewPosition::VALID: {
-                fen_ = position.fen;
+                ConfirmMove(position);
                 ChangeTurn();
                 break;
               }
 
               case chsmv::NewPosition::CHECK: {
-                fen_ = position.fen;
+                ConfirmMove(position);
                 Display();
 
                 Message message("Check", sf::VideoMode(210, 70));
@@ -279,7 +287,7 @@ void Game::Events() {
               }
 
               case chsmv::NewPosition::DRAW: {
-                fen_ = position.fen;
+                ConfirmMove(position);
                 Display();
 
                 Message message("Draw", sf::VideoMode(185, 70));
@@ -292,7 +300,7 @@ void Game::Events() {
               }
 
               case chsmv::NewPosition::CHECKMATE: {
-                fen_ = position.fen;
+                ConfirmMove(position);
                 Display();
 
                 Message message("Checkmate", sf::VideoMode(370, 70));
@@ -344,12 +352,12 @@ void Game::Display() {
   window_.draw(bg_sprite_);
 
   // Rotate board
-  if (mode_ == Mode::HUMAN && turn_ == chsmv::BLACK
-      || mode_ == Mode::AI && ai_color_ == chsmv::WHITE) {
+  if ((mode_ == Mode::HUMAN && turn_ == chsmv::BLACK)
+      || (mode_ == Mode::AI && ai_color_ == chsmv::WHITE)) {
     board_sprite_.setRotation(180.f);
     board_sprite_.setOrigin(board_texture_size_, board_texture_size_);
-  } else if (mode_ == Mode::HUMAN && turn_ == chsmv::WHITE
-      || mode_ == Mode::AI && ai_color_ == chsmv::BLACK) {
+  } else if ((mode_ == Mode::HUMAN && turn_ == chsmv::WHITE)
+      || (mode_ == Mode::AI && ai_color_ == chsmv::BLACK)) {
     board_sprite_.setRotation(0.f);
     board_sprite_.setOrigin(0, 0);
   }
@@ -358,8 +366,8 @@ void Game::Display() {
   float row = square_indent_;
   float col = square_indent_;
 
-  if (mode_ == Mode::HUMAN && !spot_1_.empty()
-      || mode_ == Mode::AI && turn_ != ai_color_) {
+  if ((mode_ == Mode::HUMAN && !spot_1_.empty())
+      || (mode_ == Mode::AI && turn_ != ai_color_)) {
 
     RectangleShape square(Vector2f(square_size_, square_size_));
     square.setFillColor(Color(0, 128, 0, 128));
@@ -371,7 +379,7 @@ void Game::Display() {
       std::reverse(valid_moves.begin(), valid_moves.end());
     }
 
-    for (int i = 0; i < valid_moves.size(); ++i) {
+    for (size_t i = 0; i < valid_moves.size(); ++i) {
       square.setPosition(col, row);
 
       if (valid_moves[i] == '1') {
@@ -395,8 +403,8 @@ void Game::Display() {
                  square_size_ / piece_size_);
 
   // Rotate pieces
-  if (mode_ == Mode::HUMAN && turn_ == chsmv::BLACK
-      || mode_ == Mode::AI && ai_color_ == chsmv::WHITE) {
+  if ((mode_ == Mode::HUMAN && turn_ == chsmv::BLACK)
+      || (mode_ == Mode::AI && ai_color_ == chsmv::WHITE)) {
     auto iter = std::find(fen_.begin(), fen_.end(), ' ');
     std::reverse(fen_.begin(), iter);
   }
@@ -463,8 +471,8 @@ void Game::Display() {
   }
 
   // Rotate pieces again
-  if (mode_ == Mode::HUMAN && turn_ == chsmv::BLACK
-      || mode_ == Mode::AI && ai_color_ == chsmv::WHITE) {
+  if ((mode_ == Mode::HUMAN && turn_ == chsmv::BLACK)
+      || (mode_ == Mode::AI && ai_color_ == chsmv::WHITE)) {
     auto iter = std::find(fen_.begin(), fen_.end(), ' ');
     std::reverse(fen_.begin(), iter);
   }
@@ -506,6 +514,13 @@ std::string Game::ClickToSquare(const Event::MouseButtonEvent &click) const {
 
   // Invalid click
   return "";
+}
+
+void Game::ConfirmMove(const chsmv::NewPosition &position) {
+  // Play move sound
+  move_sound_.play();
+  // Change board position
+  fen_ = position.fen;
 }
 
 void Game::ChangeTurn() {

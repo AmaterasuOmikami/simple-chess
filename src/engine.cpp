@@ -60,7 +60,7 @@ std::string Engine::GetNextMove(std::string fen_position) {
     str += (char *) buffer_;
   } while (read_ >= sizeof(buffer_));
 
-  auto n = str.find("bestmove");
+  int n = static_cast<int>(str.find("bestmove"));
   if (n != -1) return str.substr(n + 9, 5);
 
   return "error";

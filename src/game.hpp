@@ -6,6 +6,7 @@
 #include <memory>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <chsmv.h>
 
 #include "promotion.hpp"
@@ -30,6 +31,8 @@ class Game {
   void Display();
 
   std::string ClickToSquare(const sf::Event::MouseButtonEvent &click) const;
+
+  void ConfirmMove(const chsmv::NewPosition &position);
 
   void ChangeTurn();
 
@@ -60,6 +63,9 @@ class Game {
   sf::Texture black_pawn_;
 
   float piece_size_;
+
+  sf::SoundBuffer move_sound_buffer_;
+  sf::Sound move_sound_;
 
   Mode mode_;
 

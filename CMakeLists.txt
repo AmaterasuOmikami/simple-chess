@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.21)
 project(GUI)
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s -o3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -pedantic -fno-rtti -s -O3")
 set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/icon.rc")
 
 add_executable(${PROJECT_NAME}
@@ -20,10 +20,11 @@ add_executable(${PROJECT_NAME}
         src/engine.cpp)
 
 # SFML
+# Don't forget to add openal32.dll to build directory
 set(SFML_STATIC_LIBRARIES TRUE)
 set(SFML_DIR C:/SFML/lib/cmake/SFML)
-find_package(SFML COMPONENTS system window graphics)
-target_link_libraries(${PROJECT_NAME} sfml-system sfml-window sfml-graphics)
+find_package(SFML COMPONENTS system window graphics audio)
+target_link_libraries(${PROJECT_NAME} sfml-audio sfml-graphics sfml-window sfml-system)
 
 # Chsmv
 include_directories(C:/programming/chess/chsmv/include)

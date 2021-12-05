@@ -5,9 +5,9 @@
 class Button : public sf::Drawable {
  public:
   enum class Status {
-    none,
-    hovered,
-    clicked
+    NONE,
+    HOVERED,
+    CLICKED
   };
 
   Button(const sf::Vector2i &coordinates,

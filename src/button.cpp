@@ -3,7 +3,7 @@
 Button::Button(const sf::Vector2i &coordinates,
                const sf::Vector2i &size,
                const std::string &text)
-    : coordinates_(coordinates), size_(size), status_(Status::none) {
+    : coordinates_(coordinates), size_(size), status_(Status::NONE) {
   // Manage texture
   if (!texture_.loadFromFile("../assets/menu-textures/button_color.jpg")) {
     throw std::runtime_error("Failed to load button texture");
@@ -35,18 +35,18 @@ Button::Status Button::GetStatus() const {
 
 void Button::SetStatus(Button::Status status) {
   switch (status_ = status) {
-    case Status::none: {
+    case Status::NONE: {
       sprite_.setColor(sf::Color(0, 0, 0, 0));
       break;
     }
 
-    case Status::hovered: {
+    case Status::HOVERED: {
       sprite_.setColor(sf::Color(255, 255, 255, 128));
 
       break;
     }
 
-    case Status::clicked: {
+    case Status::CLICKED: {
       sprite_.setColor(sf::Color(255, 128, 128, 128));
       break;
     }
@@ -54,7 +54,7 @@ void Button::SetStatus(Button::Status status) {
 }
 
 void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-  target.draw(sprite_);
-  target.draw(text_);
+  target.draw(sprite_, states);
+  target.draw(text_, states);
 }
 

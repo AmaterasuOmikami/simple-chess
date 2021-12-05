@@ -7,7 +7,7 @@ CXX_DEFINES = -DSFML_STATIC
 
 CXX_INCLUDES = @CMakeFiles/GUI.dir/includes_CXX.rsp
 
-CXX_FLAGS =  -s -o3 -g -std=gnu++14
+CXX_FLAGS =  -Wall -Werror -Wextra -pedantic -fno-rtti -s -O3 -g -std=gnu++14
 
 RC_DEFINES = -DSFML_STATIC
 
