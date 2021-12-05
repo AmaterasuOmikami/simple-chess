@@ -4,7 +4,7 @@ using namespace sf;
 
 Game::Game(Game::Mode mode)
     : window_(VideoMode(800, 900),
-              "Chess one player",
+              "Game",
               Style::Close),
       mode_(mode),
       turn_(chsmv::WHITE) {
