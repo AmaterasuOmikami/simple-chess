@@ -64,6 +64,9 @@ class Game {
 
   float piece_size_;
 
+  sf::Font fen_font_;
+  sf::Text fen_text_;
+
   sf::SoundBuffer move_sound_buffer_;
   sf::Sound move_sound_;
 

@@ -100,14 +100,10 @@ Game::Game(Game::Mode mode)
 
           || !black_king_.loadFromFile(path, IntRect(0, size, size, size))
           || !black_queen_.loadFromFile(path, IntRect(size, size, size, size))
-          || !black_bishop_.loadFromFile(path,
-                                         IntRect(2 * size, size, size, size))
-          || !black_knight_.loadFromFile(path,
-                                         IntRect(3 * size, size, size, size))
-          || !black_rook_.loadFromFile(path,
-                                       IntRect(4 * size, size, size, size))
-          || !black_pawn_.loadFromFile(path,
-                                       IntRect(5 * size, size, size, size))) {
+          || !black_bishop_.loadFromFile(path, IntRect(2 * size, size, size, size))
+          || !black_knight_.loadFromFile(path, IntRect(3 * size, size, size, size))
+          || !black_rook_.loadFromFile(path, IntRect(4 * size, size, size, size))
+          || !black_pawn_.loadFromFile(path, IntRect(5 * size, size, size, size))) {
         throw std::runtime_error("Failed to load pieces/1.png");
       }
       break;
@@ -121,22 +117,17 @@ Game::Game(Game::Mode mode)
 
       if (!white_king_.loadFromFile(path, IntRect(0, size, size, size))
           || !white_queen_.loadFromFile(path, IntRect(size, size, size, size))
-          || !white_bishop_.loadFromFile(path,
-                                         IntRect(4 * size, size, size, size))
-          || !white_knight_.loadFromFile(path,
-                                         IntRect(3 * size, size, size, size))
-          || !white_rook_.loadFromFile(path,
-                                       IntRect(2 * size, size, size, size))
-          || !white_pawn_.loadFromFile(path,
-                                       IntRect(5 * size, size, size, size))
+          || !white_bishop_.loadFromFile(path, IntRect(4 * size, size, size, size))
+          || !white_knight_.loadFromFile(path, IntRect(3 * size, size, size, size))
+          || !white_rook_.loadFromFile(path, IntRect(2 * size, size, size, size))
+          || !white_pawn_.loadFromFile(path, IntRect(5 * size, size, size, size))
 
           || !black_king_.loadFromFile(path, IntRect(0, 0, size, size))
           || !black_queen_.loadFromFile(path, IntRect(size, 0, size, size))
           || !black_bishop_.loadFromFile(path, IntRect(4 * size, 0, size, size))
           || !black_knight_.loadFromFile(path, IntRect(3 * size, 0, size, size))
           || !black_rook_.loadFromFile(path, IntRect(2 * size, 0, size, size))
-          || !black_pawn_.loadFromFile(path,
-                                       IntRect(5 * size, 0, size, size))) {
+          || !black_pawn_.loadFromFile(path, IntRect(5 * size, 0, size, size))) {
         throw std::runtime_error("Failed to load pieces/2.png");
       }
       break;
@@ -148,35 +139,19 @@ Game::Game(Game::Mode mode)
       size = 300;
       piece_size_ = static_cast<float>(size);
 
-      if (!white_king_.loadFromFile(path,
-                                    IntRect(3 * size, 125 + size, size, size))
-          || !white_queen_.loadFromFile(path,
-                                        IntRect(2 * size,
-                                                125 + size,
-                                                size,
-                                                size))
-          || !white_bishop_.loadFromFile(path,
-                                         IntRect(size, 125 + size, size, size))
-          || !white_knight_.loadFromFile(path,
-                                         IntRect(4 * size,
-                                                 125 + size,
-                                                 size,
-                                                 size))
+      if (!white_king_.loadFromFile(path, IntRect(3 * size, 125 + size, size, size))
+          || !white_queen_.loadFromFile(path, IntRect(2 * size, 125 + size, size, size))
+          || !white_bishop_.loadFromFile(path, IntRect(size, 125 + size, size, size))
+          || !white_knight_.loadFromFile(path, IntRect(4 * size, 125 + size, size, size))
           || !white_rook_.loadFromFile(path, IntRect(0, 125 + size, size, size))
-          || !white_pawn_.loadFromFile(path,
-                                       IntRect(5 * size,
-                                               125 + size,
-                                               size,
-                                               size))
+          || !white_pawn_.loadFromFile(path, IntRect(5 * size, 125 + size, size, size))
 
           || !black_king_.loadFromFile(path, IntRect(3 * size, 50, size, size))
           || !black_queen_.loadFromFile(path, IntRect(2 * size, 50, size, size))
           || !black_bishop_.loadFromFile(path, IntRect(size, 50, size, size))
-          || !black_knight_.loadFromFile(path,
-                                         IntRect(4 * size, 50, size, size))
+          || !black_knight_.loadFromFile(path, IntRect(4 * size, 50, size, size))
           || !black_rook_.loadFromFile(path, IntRect(0 * size, 50, size, size))
-          || !black_pawn_.loadFromFile(path,
-                                       IntRect(5 * size, 50, size, size))) {
+          || !black_pawn_.loadFromFile(path, IntRect(5 * size, 50, size, size))) {
         throw std::runtime_error("Failed to load pieces/3.png");
       }
       break;
@@ -199,8 +174,17 @@ Game::Game(Game::Mode mode)
   black_rook_.setSmooth(true);
   black_pawn_.setSmooth(true);
 
-  // Manage sound settings
+  // Manage text
+  if (!fen_font_.loadFromFile("C:/Windows/Fonts/BRITANIC.TTF")) {
+    throw std::runtime_error("Failed to load fen string font");
+  }
+  fen_text_.setFont(fen_font_);
+  fen_text_.setString(fen_);
+  fen_text_.setCharacterSize(18);
+  fen_text_.setFillColor(Color::White);
+  fen_text_.setPosition(20, 820);
 
+  // Manage sound settings
   if (!move_sound_buffer_.loadFromFile("../assets/sounds/move.wav")) {
     throw std::runtime_error("Filed to load move sound");
   }
@@ -363,6 +347,9 @@ void Game::Display() {
   }
   window_.draw(board_sprite_);
 
+  // Draw fen string
+  window_.draw(fen_text_);
+
   float row = square_indent_;
   float col = square_indent_;
 
@@ -521,6 +508,8 @@ void Game::ConfirmMove(const chsmv::NewPosition &position) {
   move_sound_.play();
   // Change board position
   fen_ = position.fen;
+  // Set new fen position in fen string
+  fen_text_.setString(fen_);
 }
 
 void Game::ChangeTurn() {
