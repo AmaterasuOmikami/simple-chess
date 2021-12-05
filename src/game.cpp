@@ -198,7 +198,6 @@ Game::Game(Game::Mode mode)
 
   if (mode_ == Mode::AI) {
     // Read AI color
-
     int ai_color;
     settings >> ai_color;
     // Skip parameter comment
@@ -394,7 +393,8 @@ void Game::Display() {
     auto valid_moves = chsmv::HighlightMoves(fen_, spot_1_);
 
     // Reverse highlighting if black turn
-    if (mode_ == Mode::HUMAN && turn_ == chsmv::BLACK) {
+    if ((mode_ == Mode::HUMAN && turn_ == chsmv::BLACK)
+        || (mode_ == Mode::AI && ai_color_ == chsmv::WHITE)) {
       std::reverse(valid_moves.begin(), valid_moves.end());
     }
 
