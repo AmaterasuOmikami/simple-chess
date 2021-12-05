@@ -2,8 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "button.hpp"
 #include "game.hpp"
+#include "settings.hpp"
 
 class Menu {
  public:

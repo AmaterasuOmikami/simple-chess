@@ -14,7 +14,7 @@ Menu::Menu() :
 
   // Mange background picture
   if (!bg_texture_.loadFromFile("../assets/menu-textures/main_menu_bg.jpg")) {
-    throw std::runtime_error("Failed to load background texture");
+    throw std::runtime_error("Failed to load main menu background texture");
   }
   bg_texture_.setSmooth(true);
   bg_sprite_.setTexture(bg_texture_);
@@ -82,6 +82,12 @@ void Menu::Events() {
 
         } else if (settings_.InArea(event.mouseButton.x, event.mouseButton.y)) {
           settings_.SetStatus(Button::Status::HOVERED);
+
+          Settings settings;
+          while (settings.IsOpen()) {
+            settings.Events();
+            settings.Display();
+          }
 
         } else if (exit_.InArea(event.mouseButton.x, event.mouseButton.y)) {
           exit_.SetStatus(Button::Status::HOVERED);
