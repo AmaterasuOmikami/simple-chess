@@ -45,6 +45,8 @@ void Message::Events() {
 }
 
 void Message::Display() {
+  window_.clear();
+
   window_.draw(bg_sprite_);
   window_.draw(message_);
 

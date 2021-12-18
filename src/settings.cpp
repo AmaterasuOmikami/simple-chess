@@ -138,6 +138,8 @@ void Settings::Events() {
 }
 
 void Settings::Display() {
+  window_.clear();
+
   window_.draw(bg_sprite_);
 
   for (auto &setting: settings_text_) {

@@ -213,7 +213,9 @@ Game::Game(Game::Mode mode)
 }
 
 void Game::Close() {
-  Engine::CloseConnection();
+  if (mode_ == Mode::AI) {
+    Engine::CloseConnection();
+  }
   window_.close();
 }
 
@@ -234,9 +236,8 @@ void Game::Events() {
 
   while (window_.pollEvent(event)) {
     switch (event.type) {
-      case Event::MouseButtonPressed: {
-        // Buttons
-
+      case Event::MouseButtonPressed:
+        // Button
         if (back_button_.InArea(event.mouseButton.x, event.mouseButton.y)) {
           back_button_.SetStatus(Button::Status::CLICKED);
         }
@@ -253,91 +254,93 @@ void Game::Events() {
           if (chsmv::IsCurrentColor(fen_, spot_2_)) {
             spot_1_ = spot_2_;
             spot_2_.clear();
-          }
-
-          if (!spot_2_.empty()) {
-            position = chsmv::MakeMove(fen_, spot_1_ + spot_2_);
+          } else {
+            position = chsmv::MakeMove(fen_, (spot_1_ + spot_2_));
             position_status_validation:
             switch (position.status) {
-              case chsmv::NewPosition::VALID: {
+              case chsmv::NewPosition::VALID:
                 ConfirmMove(position);
+
                 ChangeTurn();
                 break;
-              }
 
-              case chsmv::NewPosition::CHECK: {
+              case chsmv::NewPosition::CHECK:
                 ConfirmMove(position);
                 Display();
 
-                Message message("Check", sf::VideoMode(210, 70));
-                while (message.IsOpen()) {
-                  message.Events();
-                  message.Display();
+                {
+                  Message message("Check", sf::VideoMode(210, 70));
+                  while (message.IsOpen()) {
+                    message.Display();
+                    message.Events();
+                  }
                 }
+
                 ChangeTurn();
                 break;
-              }
 
-              case chsmv::NewPosition::DRAW: {
+              case chsmv::NewPosition::DRAW:
                 ConfirmMove(position);
-                Display();
+                //Display();
 
-                Message message("Draw", sf::VideoMode(185, 70));
-                while (message.IsOpen()) {
-                  message.Events();
-                  message.Display();
+                {
+                  Message message("Draw", sf::VideoMode(185, 70));
+                  while (message.IsOpen()) {
+                    message.Display();
+                    message.Events();
+                  }
                 }
-                Close();
-                break;
-              }
 
-              case chsmv::NewPosition::CHECKMATE: {
+                Close();
+                return;
+
+              case chsmv::NewPosition::CHECKMATE:
                 ConfirmMove(position);
-                Display();
+                //Display();
 
-                Message message("Checkmate", sf::VideoMode(370, 70));
-                while (message.IsOpen()) {
-                  message.Events();
-                  message.Display();
+                {
+                  Message message("Checkmate", sf::VideoMode(370, 70));
+                  while (message.IsOpen()) {
+                    message.Display();
+                    message.Events();
+                  }
                 }
+
                 Close();
-                break;
-              }
+                return;
 
               case chsmv::NewPosition::PAWN_PROMOTION: {
+                // Get new piece
                 char promotion;
                 Promotion promotion_window(promotion);
                 while (promotion_window.IsOpen()) {
-                  promotion_window.Events();
                   promotion_window.Display();
+                  promotion_window.Events();
                 }
 
                 position = chsmv::MakeMove(fen_, spot_1_ + spot_2_ + promotion);
+              }
                 goto position_status_validation;
-              }
 
-              case chsmv::NewPosition::INVALID: {
+              case chsmv::NewPosition::INVALID:
                 break;
-              }
             }
+
             spot_1_.clear();
             spot_2_.clear();
           }
         }
-
         break;
-      }
 
-      case Event::MouseButtonReleased: {
+      case Event::MouseButtonReleased:
         if (back_button_.InArea(event.mouseButton.x, event.mouseButton.y)) {
           back_button_.SetStatus(Button::Status::HOVERED);
 
           RewindPosition();
         }
         break;
-      }
 
-      case sf::Event::MouseMoved: {
+      case sf::Event::MouseMoved:
         if (back_button_.InArea(event.mouseMove.x, event.mouseMove.y)) {
           if (back_button_.GetStatus() != Button::Status::CLICKED) {
             back_button_.SetStatus(Button::Status::HOVERED);
@@ -346,21 +349,20 @@ void Game::Events() {
           back_button_.SetStatus(Button::Status::NONE);
         }
         break;
-      }
 
-      case Event::Closed: {
+      case Event::Closed:
         Close();
-        break;
-      }
+        return;
 
-      default: {
+      default:
         break;
-      }
     }
   }
 }
 
 void Game::Display() {
+  window_.clear();
+
   window_.draw(bg_sprite_);
 
   // Rotate board
@@ -446,43 +448,56 @@ void Game::Display() {
       }
     } else {
       switch (fen_[i]) {
-        case 'K':piece.setTexture(white_king_);
+        case 'K':
+          piece.setTexture(white_king_);
           break;
 
-        case 'Q':piece.setTexture(white_queen_);
+        case 'Q':
+          piece.setTexture(white_queen_);
           break;
 
-        case 'B':piece.setTexture(white_bishop_);
+        case 'B':
+          piece.setTexture(white_bishop_);
           break;
 
-        case 'N':piece.setTexture(white_knight_);
+        case 'N':
+          piece.setTexture(white_knight_);
           break;
 
-        case 'R':piece.setTexture(white_rook_);
+        case 'R':
+          piece.setTexture(white_rook_);
           break;
 
-        case 'P':piece.setTexture(white_pawn_);
+        case 'P':
+          piece.setTexture(white_pawn_);
           break;
 
-        case 'k':piece.setTexture(black_king_);
+        case 'k':
+          piece.setTexture(black_king_);
           break;
 
-        case 'q':piece.setTexture(black_queen_);
+        case 'q':
+          piece.setTexture(black_queen_);
           break;
 
-        case 'b':piece.setTexture(black_bishop_);
+        case 'b':
+          piece.setTexture(black_bishop_);
           break;
 
-        case 'n':piece.setTexture(black_knight_);
+        case 'n':
+          piece.setTexture(black_knight_);
           break;
 
-        case 'r':piece.setTexture(black_rook_);
+        case 'r':
+          piece.setTexture(black_rook_);
           break;
 
-        case 'p':piece.setTexture(black_pawn_);
+        case 'p':
+          piece.setTexture(black_pawn_);
           break;
 
-        default:throw std::runtime_error("Invalid FEN character");
+        default:
+          throw std::runtime_error("Invalid FEN character");
       }
       window_.draw(piece);
       col += square_size_;

@@ -5,7 +5,7 @@ Menu::Menu() :
             "Chess Menu",
             sf::Style::Close),
     // Manage Buttons
-    human_({50, 200}, {200, 50}, "one player"),
+    human_({50, 200}, {230, 50}, "two players"),
     ai_({50, 275}, {180, 50}, "stockfish"),
     settings_({50, 350}, {155, 50}, "settings"),
     exit_({50, 450}, {80, 50}, "exit") {
@@ -63,8 +63,8 @@ void Menu::Events() {
           window_.setVisible(false);
           Game game(Game::Mode::HUMAN);
           while (game.IsOpen()) {
-            game.Events();
             game.Display();
+            game.Events();
           }
           window_.setVisible(true);
 
@@ -75,8 +75,8 @@ void Menu::Events() {
           window_.setVisible(false);
           Game game(Game::Mode::AI);
           while (game.IsOpen()) {
-            game.Events();
             game.Display();
+            game.Events();
           }
           window_.setVisible(true);
 
@@ -85,8 +85,8 @@ void Menu::Events() {
 
           Settings settings;
           while (settings.IsOpen()) {
-            settings.Events();
             settings.Display();
+            settings.Events();
           }
 
         } else if (exit_.InArea(event.mouseButton.x, event.mouseButton.y)) {
@@ -144,6 +144,8 @@ void Menu::Events() {
 }
 
 void Menu::Display() {
+  window_.clear();
+
   window_.draw(bg_sprite_);
   window_.draw(title_);
 

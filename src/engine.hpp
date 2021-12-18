@@ -17,5 +17,5 @@ class Engine {
   static PROCESS_INFORMATION process_information_;
   static HANDLE pipin_w_, pipin_r_, pipout_w_, pipout_r_;
   static BYTE buffer_[2048];
-  static DWORD writ_, read_, available_;
+  static DWORD write_, read_, available_;
 };

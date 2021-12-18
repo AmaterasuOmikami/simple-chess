@@ -5,7 +5,7 @@ SECURITY_ATTRIBUTES Engine::security_attributes_;
 PROCESS_INFORMATION Engine::process_information_;
 HANDLE Engine::pipin_w_, Engine::pipin_r_, Engine::pipout_w_, Engine::pipout_r_;
 BYTE Engine::buffer_[2048];
-DWORD Engine::writ_, Engine::read_, Engine::available_;
+DWORD Engine::write_, Engine::read_, Engine::available_;
 
 void Engine::ConnectToEngine(char *path) {
   pipin_w_ = pipin_r_ = pipout_w_ = pipout_r_ = nullptr;
@@ -41,7 +41,7 @@ std::string Engine::GetNextMove(std::string fen_position) {
   WriteFile(pipin_w_,
             fen_position.c_str(),
             fen_position.length(),
-            &writ_,
+            &write_,
             nullptr);
   Sleep(500);
 
@@ -67,7 +67,7 @@ std::string Engine::GetNextMove(std::string fen_position) {
 }
 
 void Engine::CloseConnection() {
-  WriteFile(pipin_w_, "quit\n", 5, &writ_, nullptr);
+  WriteFile(pipin_w_, "quit\n", 5, &write_, nullptr);
   if (pipin_w_ != nullptr) CloseHandle(pipin_w_);
   if (pipin_r_ != nullptr) CloseHandle(pipin_r_);
   if (pipout_w_ != nullptr) CloseHandle(pipout_w_);

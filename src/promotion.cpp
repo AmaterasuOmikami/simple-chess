@@ -121,6 +121,8 @@ void Promotion::Events() {
 }
 
 void Promotion::Display() {
+  window_.clear();
+
   window_.draw(bg_sprite_);
 
   // Buttons

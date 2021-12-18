@@ -3,9 +3,7 @@
 int main() {
   Menu menu;
   while (menu.IsOpen()) {
-    menu.Events();
     menu.Display();
+    menu.Events();
   }
-
-  return 0;
 }
