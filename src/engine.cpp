@@ -36,7 +36,7 @@ void Engine::ConnectToEngine(char *path) {
 
 std::string Engine::GetNextMove(std::string fen_position) {
   std::string str;
-  fen_position = "position fen " + fen_position + "\ngo depth 1\n";
+  fen_position = "position fen " + fen_position + "\ngo depth 5\n";
 
   WriteFile(pipin_w_,
             fen_position.c_str(),

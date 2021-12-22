@@ -3,7 +3,7 @@
 using namespace sf;
 
 Message::Message(const std::string &message, const sf::VideoMode &video_mode) :
-    window_(video_mode, "Promotion", Style::Close) {
+    window_(video_mode, message, Style::Close) {
   // Mange window settings
   window_.setFramerateLimit(30);
 

@@ -227,7 +227,7 @@ void Game::Events() {
   Event event{};
   chsmv::NewPosition position;
 
-  // If stockfish mode and his turn
+  // If stockfish mode and it's turn
   if (mode_ == Mode::AI && turn_ == ai_color_) {
     std::string move = Engine::GetNextMove(fen_);
     position = chsmv::MakeMove(fen_, move);
@@ -281,7 +281,7 @@ void Game::Events() {
 
               case chsmv::NewPosition::DRAW:
                 ConfirmMove(position);
-                //Display();
+                Display();
 
                 {
                   Message message("Draw", sf::VideoMode(185, 70));
@@ -296,7 +296,7 @@ void Game::Events() {
 
               case chsmv::NewPosition::CHECKMATE:
                 ConfirmMove(position);
-                //Display();
+                Display();
 
                 {
                   Message message("Checkmate", sf::VideoMode(370, 70));
